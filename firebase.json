@@ -1,13 +1,37 @@
 {
-  "hosting": {
-    "source": ".",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "frameworksBackend": {
-      "region": "us-west1"
-    }
-  }
+	"hosting": {
+		"source": ".",
+		"ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+		"frameworksBackend": {
+			"region": "us-west1"
+		}
+	},
+	"emulators": {
+		"ui": {
+			"enabled": true,
+			"host": "0.0.0.0",
+			"port": 4000
+		},
+		"hosting": {
+			"host": "0.0.0.0",
+			"port": 4001
+		},
+		"functions": {
+			"host": "0.0.0.0",
+			"port": 4002
+		},
+		"firestore": {
+			"host": "0.0.0.0",
+			"port": 4010,
+			"websocketPort": 4011
+		},
+		"pubsub": {
+			"host": "0.0.0.0",
+			"port": 4020
+		},
+		"auth": {
+			"host": "0.0.0.0",
+			"port": 4030
+		}
+	}
 }

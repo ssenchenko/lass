@@ -1,3 +1,35 @@
+# Learning Assistant
+
+## Develop
+
+On mac arm there can be a problem running firebase locally. Use docker instead
+
+```bash
+# run a container in changes watch-mode
+docker compose watch
+
+# alternatevely run as daemon
+docker compose up -d
+
+# bring it down
+docker compose down
+```
+
+Access emulator at http://localhost:4000/
+
+To monitor, access shell of running emulator
+
+```bash
+# list running containers
+docker container ps
+
+# start bash into container
+docker compose exec firebase bash
+
+# see firebase log in docker bash
+more firebase-debug.log
+```
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).

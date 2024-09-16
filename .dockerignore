@@ -3,18 +3,12 @@ node_modules
 # Output
 .output
 .vercel
-/.svelte-kit
-/build
+.svelte-kit
+build
 
 # OS
 .DS_Store
 Thumbs.db
-
-# Env
-.env
-.env.*
-!.env.example
-!.env.test
 
 # Vite
 vite.config.js.timestamp-*
@@ -22,3 +16,6 @@ vite.config.ts.timestamp-*
 
 # Firebase
 firebase-debug.log
+
+# docs
+*.md

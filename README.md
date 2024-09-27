@@ -30,6 +30,15 @@ docker compose exec firebase bash
 more firebase-debug.log
 ```
 
+## Deploy
+
+When getitng an error
+```
+Caller is missing permission 'iam.serviceaccounts.actAs' on service account projects/-/serviceAccounts/471027728136-compute@developer.gserviceaccount.com.Grant the role 'roles/iam.serviceAccountUser' to the caller on the service account projects/-/serviceAccounts/471027728136-compute@developer.gserviceaccount.com.You can do that by running 'gcloud iam service-accounts add-iam-policy-binding projects/-/serviceAccounts/471027728136-compute@developer.gserviceaccount.com --member MEMBER --role roles/iam.serviceAccountUser'where MEMBER has a prefix like 'user:' or 'serviceAccount:'.
+```
+`MEMBER` is `serviceAccount:<github_action_service_account>` and the github account looks like
+`github-action-<id>@<project_id>.iam.gserviceaccount.com`. Find it in service accounts i.e `github-action-853645666@learning-assistant-poc.iam.gserviceaccount.com`
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).

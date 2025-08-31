@@ -1,17 +1,24 @@
-@import '@fontsource/fira-mono';
+/* Import a modern font, e.g., Inter */
+@import '@fontsource/inter/variable.css';
 
 :root {
-	--font-body: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+	/* A more modern and clean font stack */
+	--font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
 		Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 	--font-mono: 'Fira Mono', monospace;
-	--color-bg-0: rgb(202, 216, 228);
-	--color-bg-1: hsl(209, 36%, 86%);
-	--color-bg-2: hsl(224, 44%, 95%);
-	--color-theme-1: #ff3e00;
-	--color-theme-2: #4075a6;
-	--color-text: rgba(0, 0, 0, 0.7);
+
+	/* A more joyful and vibrant color palette */
+	--color-bg: #FFFBF5; /* Warm off-white */
+	--color-surface: #ffffff; /* White for cards/containers */
+	--color-primary: #FF6B6B; /* Vibrant coral */
+	--color-primary-hover: #E05252; /* Darker coral for hover */
+	--color-text: #4A4A4A; /* Softer dark grey */
+	--color-muted: #888888; /* Medium warm grey */
+	--color-border: #EAEAEA; /* Light, soft grey */
+
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
+
 	font-family: var(--font-body);
 	color: var(--color-text);
 }
@@ -19,15 +26,7 @@
 body {
 	min-height: 100vh;
 	margin: 0;
-	background-attachment: fixed;
-	background-color: var(--color-bg-1);
-	background-size: 100vw 100vh;
-	background-image: radial-gradient(
-			50% 50% at 50% 50%,
-			rgba(255, 255, 255, 0.75) 0%,
-			rgba(255, 255, 255, 0) 100%
-		),
-		linear-gradient(180deg, var(--color-bg-0) 0%, var(--color-bg-1) 15%, var(--color-bg-2) 50%);
+	background-color: var(--color-bg);
 }
 
 h1,
@@ -37,34 +36,45 @@ p {
 }
 
 p {
-	line-height: 1.5;
+	line-height: 1.6;
+	color: var(--color-muted);
+    font-weight: 450;
 }
 
 a {
-	color: var(--color-theme-1);
+	color: var(--color-primary);
 	text-decoration: none;
+	transition: color 0.2s ease;
 }
 
 a:hover {
 	text-decoration: underline;
+	color: var(--color-primary-hover);
 }
 
 h1 {
-	font-size: 2rem;
+	font-size: 2.5rem;
+	font-weight: 700;
 	text-align: center;
+	margin-bottom: 1rem;
 }
 
 h2 {
-	font-size: 1rem;
+	font-size: 1.75rem;
+	font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.5rem;
 }
 
 pre {
 	font-size: 16px;
 	font-family: var(--font-mono);
-	background-color: rgba(255, 255, 255, 0.45);
-	border-radius: 3px;
-	box-shadow: 2px 2px 6px rgb(255 255 255 / 25%);
-	padding: 0.5em;
+	background-color: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: 6px;
+	padding: 1em;
 	overflow-x: auto;
 	color: var(--color-text);
 }
@@ -80,8 +90,26 @@ pre {
 
 input,
 button {
-	font-size: inherit;
+	font-size: 1.1rem;
+    font-weight: 500;
+    line-height: 1.5;
 	font-family: inherit;
+	border-radius: 6px;
+	padding: 0.8rem 1.2rem;
+	border: 1px solid var(--color-border);
+	transition: all 0.2s ease;
+}
+
+input:focus,
+button:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.25);
+}
+
+
+button {
+    cursor: pointer;
 }
 
 button:focus:not(:focus-visible) {
@@ -90,7 +118,7 @@ button:focus:not(:focus-visible) {
 
 @media (min-width: 720px) {
 	h1 {
-		font-size: 2.4rem;
+		font-size: 3rem;
 	}
 }
 

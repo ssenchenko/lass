@@ -1,0 +1,11 @@
+**/.terraform/*
+*.tfvars
+*.tfoverride
+.envrc
+.terraformrc
+terraform.rc
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl

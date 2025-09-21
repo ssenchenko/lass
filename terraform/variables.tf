@@ -3,6 +3,11 @@ variable "gcp_project_id" {
   type        = string
 }
 
+variable "github_repository" {
+  description = "The GitHub repository in the format <owner>/<repo>"
+  type        = string
+}
+
 variable "google_api_key_value" {
   description = "The actual value of your Google API Key"
   type        = string

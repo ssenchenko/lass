@@ -8,6 +8,10 @@ terraform {
       source  = "hashicorp/google-beta"
       version = "~> 6.0"
     }
+    random = {
+      source = "hashicorp/random"
+      version = "3.1.0"
+    }
   }
 }
 
@@ -31,6 +35,12 @@ provider "google" {
   region  = "us-central1"
 }
 
+resource "random_string" "site_id_suffix" {
+  length  = 8
+  special = false
+  upper   = false
+}
+
 resource "google_firebase_project" "default" {
   project = var.gcp_project_id
   provider = google-beta
@@ -45,11 +55,17 @@ resource "google_project_service" "default" {
     "firebase.googleapis.com",
     "serviceusage.googleapis.com",
     "secretmanager.googleapis.com",
+    "firebaseapphosting.googleapis.com",
   ])
   service = each.key
 
   # Don't disable the service if the resource block is removed by accident.
   disable_on_destroy = false
+}
+
+resource "time_sleep" "wait_for_api_enablement" {
+  depends_on = [google_project_service.default]
+  create_duration = "30s"
 }
 
 # Describes your existing Firebase Web App.
@@ -60,5 +76,31 @@ resource "google_firebase_web_app" "default" {
   display_name = "web-editor"
 }
 
+resource "google_firebase_hosting_site" "default" {
+  provider = google-beta
+  project = var.gcp_project_id
+  site_id = "web-editor-${random_string.site_id_suffix.result}"
+}
 
+resource "google_firebase_app_hosting_backend" "default" {
+  depends_on = [time_sleep.wait_for_api_enablement]
+  project = var.gcp_project_id
+  location = "us-central1"
+  backend_id = google_firebase_hosting_site.default.site_id
+  display_name = "web-editor"
+  serving_locality = "GLOBAL_ACCESS"
+  app_id = google_firebase_web_app.default.app_id
+  service_account = data.google_service_account.firebase_functions_sa.email
+}
 
+output "firebase_hosting_site_id" {
+  value = google_firebase_hosting_site.default.site_id
+}
+
+output "workload_identity_provider" {
+  value = google_iam_workload_identity_pool_provider.github_actions_provider.name
+}
+
+output "github_actions_service_account_email" {
+  value = google_service_account.github_actions_sa.email
+}

@@ -69,6 +69,13 @@ resource "google_project_iam_member" "github_actions_firebase_extensions_viewer"
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 
+# Grant the GitHub Actions service account the Cloud Functions Viewer role
+resource "google_project_iam_member" "github_actions_cloud_functions_viewer" {
+  project = var.gcp_project_id
+  role    = "roles/cloudfunctions.viewer"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
 # Grant the GitHub Actions provider the Workload Identity User role
 resource "google_service_account_iam_member" "github_actions_workload_identity_user" {
   service_account_id = google_service_account.github_actions_sa.name

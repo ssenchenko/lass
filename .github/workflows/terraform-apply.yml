@@ -43,3 +43,4 @@ jobs:
           TF_VAR_gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
           TF_VAR_google_api_key_value: ${{ secrets.GOOGLE_API_KEY_VALUE }}
           TF_VAR_google_cse_id_value: ${{ secrets.GOOGLE_CSE_ID_VALUE }}
+          TF_VAR_github_repository: ${{ github.repository }}

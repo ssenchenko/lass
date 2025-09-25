@@ -69,10 +69,17 @@ resource "google_project_iam_member" "github_actions_firebase_extensions_viewer"
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 
-# Grant the GitHub Actions service account the Cloud Functions Viewer role
-resource "google_project_iam_member" "github_actions_cloud_functions_viewer" {
+# Grant the GitHub Actions service account the Cloud Functions Admin role
+resource "google_project_iam_member" "github_actions_cloud_functions_admin" {
   project = var.gcp_project_id
-  role    = "roles/cloudfunctions.viewer"
+  role    = "roles/cloudfunctions.admin"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+# Grant the GitHub Actions service account the Cloud Run Admin role
+resource "google_project_iam_member" "github_actions_cloud_run_admin" {
+  project = var.gcp_project_id
+  role    = "roles/run.admin"
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 

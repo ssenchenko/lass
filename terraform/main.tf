@@ -97,10 +97,6 @@ output "firebase_hosting_site_id" {
   value = google_firebase_hosting_site.default.site_id
 }
 
-output "workload_identity_provider" {
-  value = google_iam_workload_identity_pool_provider.github_actions_provider.name
-}
-
 output "github_actions_service_account_email" {
   value = google_service_account.github_actions_sa.email
 }

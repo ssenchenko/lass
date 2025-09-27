@@ -1,0 +1,35 @@
+name: Deploy Web App to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'web/**'
+
+jobs:
+  build_and_deploy:
+    if: github.event_name == 'push'
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+      checks: 'write'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT }}
+      - run: npm ci && npm run build
+        working-directory: ./web
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          projectId: ${{ secrets.GCP_PROJECT_ID }}
+          firebaseServiceAccount: ${{ secrets.SERVICE_ACCOUNT_JSON_KEY }}
+          channelId: live
+          entryPoint: ./web
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks

@@ -25,6 +25,8 @@ jobs:
           service_account: ${{ secrets.SERVICE_ACCOUNT }}
       - run: npm ci && npm run build
         working-directory: ./web
+      - name: Display authenticated user
+        run: gcloud auth list
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: ${{ secrets.SERVICE_ACCOUNT_JSON_KEY }}

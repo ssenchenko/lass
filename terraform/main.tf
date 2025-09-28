@@ -100,3 +100,7 @@ output "firebase_hosting_site_id" {
 output "github_actions_service_account_email" {
   value = google_service_account.github_actions_sa.email
 }
+
+output "workload_identity_provider" {
+  value = google_iam_workload_identity_pool_provider.github_actions_provider.name
+}

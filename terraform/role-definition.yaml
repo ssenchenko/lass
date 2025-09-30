@@ -37,3 +37,8 @@ includedPermissions:
   # Permissions to manage Cloud Run
   - run.services.get
   - run.services.update
+
+  # Permissions to manage Artifact Registry
+  - artifactregistry.repositories.get
+  - artifactregistry.repositories.update
+  - artifactregistry.repositories.list

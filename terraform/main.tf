@@ -97,10 +97,26 @@ output "firebase_hosting_site_id" {
   value = google_firebase_hosting_site.default.site_id
 }
 
+output "github_actions_service_account_email" {
+  value = google_service_account.github_actions_sa.email
+}
+
 output "workload_identity_provider" {
   value = google_iam_workload_identity_pool_provider.github_actions_provider.name
 }
 
-output "github_actions_service_account_email" {
-  value = google_service_account.github_actions_sa.email
+resource "google_artifact_registry_repository" "functions_repository" {
+  project       = var.gcp_project_id
+  location      = "us-central1"
+  repository_id = "gcf-artifacts"
+  format        = "DOCKER"
+  description   = "Repository for Cloud Functions container images, managed by Terraform."
+
+  cleanup_policies {
+    id     = "keep-the-last-100-images"
+    action = "KEEP"
+    most_recent_versions {
+      keep_count = 10
+    }
+  }
 }

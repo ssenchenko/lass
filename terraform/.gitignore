@@ -9,3 +9,4 @@ terraform.rc
 *.tfstate
 *.tfstate.*
 .terraform.lock.hcl
+.env

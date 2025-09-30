@@ -4,6 +4,11 @@ on:
   pull_request:
     paths:
       - 'terraform/**'
+    paths-ignore:
+      - 'terraform/README.md'
+      - 'terraform/bootstrap.sh'
+      - 'terraform/.env.example'
+      - 'terraform/role-definition.yaml'
 
 permissions:
   contents: read

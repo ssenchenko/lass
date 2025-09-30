@@ -1,0 +1,39 @@
+title: "Terraform Executor Role"
+description: "Grants permissions necessary to run Terraform for the project."
+stage: "GA"
+includedPermissions:
+  # Permissions to manage IAM policies for other resources
+  - resourcemanager.projects.setIamPolicy
+  - secretmanager.secrets.getIamPolicy
+  - iam.serviceAccounts.getIamPolicy
+
+  # Permissions to manage Workload Identity Pools
+  - iam.workloadIdentityPools.get
+  - iam.workloadIdentityPools.create
+  - iam.workloadIdentityPools.update
+  - iam.workloadIdentityPools.delete
+  - iam.workloadIdentityPoolProviders.get
+  - iam.workloadIdentityPoolProviders.create
+  - iam.workloadIdentityPoolProviders.update
+  - iam.workloadIdentityPoolProviders.delete
+
+  # Permission to use services (like Firebase, Cloud Functions, etc.)
+  - serviceusage.services.use
+
+  # Permissions to manage secrets
+  - secretmanager.secrets.get
+  - secretmanager.secrets.create
+  - secretmanager.secrets.update
+  - secretmanager.secrets.delete
+  - secretmanager.versions.add
+  - secretmanager.versions.access
+  - secretmanager.versions.get
+
+  # Permissions to manage Firebase and App Hosting
+  - firebase.projects.get
+  - firebase.projects.update
+  - firebaseapphosting.backends.get
+
+  # Permissions to manage Cloud Run
+  - run.services.get
+  - run.services.update

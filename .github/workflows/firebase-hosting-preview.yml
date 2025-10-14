@@ -43,5 +43,6 @@ jobs:
         working-directory: ./web
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FIREBASE_CLI_EXPERIMENTS: webframeworks
         run: |
           firebase hosting:channel:deploy pr-${{ github.event.number }} --project=${{ secrets.GCP_PROJECT_ID }} --expires=1h

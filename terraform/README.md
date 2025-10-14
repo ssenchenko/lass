@@ -49,5 +49,3 @@ After completing the above steps, you can now run `terraform apply` to create an
 ```bash
 terraform apply
 ```
-
-```

@@ -44,4 +44,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          firebase hosting:channel:deploy --project=${{ secrets.GCP_PROJECT_ID }} --expires=1h
+          firebase hosting:channel:deploy pr-${{ github.event.number }} --project=${{ secrets.GCP_PROJECT_ID }} --expires=1h

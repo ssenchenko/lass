@@ -19,6 +19,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -40,9 +48,24 @@ jobs:
           npm run build
 
       - name: Deploy to Firebase Hosting preview channel
+        id: deploy
         working-directory: ./web
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FIREBASE_CLI_EXPERIMENTS: webframeworks
         run: |
-          firebase hosting:channel:deploy pr-${{ github.event.number }} --project=${{ secrets.GCP_PROJECT_ID }} --expires=1h
+          echo "deploy_output=$(firebase hosting:channel:deploy pr-${{ github.event.number }} --project=${{ secrets.GCP_PROJECT_ID }} --expires=1h --json)" >> $GITHUB_OUTPUT
+
+      - name: Add preview URL to PR comment
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const output = JSON.parse('${{ steps.deploy.outputs.deploy_output }}');
+            const siteId = Object.keys(output.result)[0];
+            const previewUrl = output.result[siteId].url;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🚀 Preview URL: ${previewUrl}`
+            });

@@ -12,18 +12,29 @@ jobs:
     if: github.event_name == 'push'
     permissions:
       contents: 'read'
-      checks: 'write'
+      id-token: 'write'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm ci && npm run build
-        working-directory: ./web
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          projectId: ${{ secrets.GCP_PROJECT_ID }}
-          firebaseServiceAccount: ${{ secrets.SERVICE_ACCOUNT_JSON_KEY }}
-          channelId: live
-          entryPoint: ./web
-        env:
-          FIREBASE_CLI_EXPERIMENTS: webframeworks
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies and build
+        working-directory: ./web
+        run: |
+          npm ci
+          npm run build
+
+      - name: Deploy to Firebase App Hosting
+        run: |
+          BACKEND_ID=$(gcloud app-hosting backends list --project=${{ secrets.GCP_PROJECT_ID }} --location=us-central1 --format='value(name)' --filter='displayName=web-editor')
+          gcloud app-hosting backends update $BACKEND_ID --project=${{ secrets.GCP_PROJECT_ID }} --location=us-central1 --source=./web/.svelte-kit/output

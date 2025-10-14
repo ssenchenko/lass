@@ -41,5 +41,7 @@ jobs:
 
       - name: Deploy to Firebase Hosting preview channel
         working-directory: ./web
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          firebase hosting:channel:deploy --project=${{ secrets.GCP_PROJECT_ID }} --expires=7d
+          firebase hosting:channel:deploy --project=${{ secrets.GCP_PROJECT_ID }} --expires=1h

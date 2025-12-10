@@ -33,6 +33,8 @@ includedPermissions:
   - firebase.projects.get
   - firebase.projects.update
   - firebaseapphosting.backends.get
+  - firebaseapphosting.traffic.get
+  - firebaseapphosting.traffic.list
 
   # Permissions to manage Cloud Run
   - run.services.get

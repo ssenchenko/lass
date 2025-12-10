@@ -42,3 +42,9 @@ includedPermissions:
   - artifactregistry.repositories.get
   - artifactregistry.repositories.update
   - artifactregistry.repositories.list
+
+  # Permissions to manage Developer Connect
+  - developerconnect.connections.get
+  - developerconnect.connections.list
+  - developerconnect.gitRepositoryLinks.get
+  - developerconnect.gitRepositoryLinks.list

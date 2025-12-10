@@ -22,7 +22,7 @@
 			<a href="/login" class="hover:text-gray-300">{m.menu_login()}</a>
 		</div>
 		<div class="md:hidden">
-			<button on:click={toggleMenu} class="text-white focus:outline-none">
+			<button on:click={toggleMenu} class="text-white focus:outline-none" aria-label="Menu">
 				<svg
 					class="w-6 h-6"
 					fill="none"

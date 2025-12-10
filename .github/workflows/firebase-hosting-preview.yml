@@ -61,11 +61,27 @@ jobs:
         with:
           script: |
             const output = JSON.parse('${{ steps.deploy.outputs.deploy_output }}');
-            const siteId = Object.keys(output.result)[0];
-            const previewUrl = output.result[siteId].url;
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `🚀 Preview URL: ${previewUrl}`
-            });
+            if (output.status === undefined || output.result === undefined || output.status === "error") {
+              console.log(output);
+            } else {
+              const results = Object.values(output.result);
+              const expireTime = results[0].expireTime;
+              const expire_time_formatted = new Date(expireTime).toUTCString();
+              const urls = results.map((siteResult) => siteResult.url);
+              const url = urls.length === 1
+                ? `[${urls[0]}](${urls[0]})`
+                : urls.map((url) => `- [${url}](${url})`).join("\n");
+              const body = `
+                Visit the preview URL for this PR (updated for commit ${commit}):
+
+                ${urlList}
+
+                <sub>(expires ${expire_time_formatted})</sub>
+              `.trim();
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `🚀 Preview URL: ${urls[0]}`
+              });
+            }

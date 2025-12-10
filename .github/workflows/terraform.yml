@@ -7,21 +7,19 @@ on:
       - dev
     paths:
       - 'terraform/**'
-    paths-ignore:
-      - 'terraform/README.md'
-      - 'terraform/bootstrap.sh'
-      - 'terraform/.env.example'
-      - 'terraform/role-definition.yaml'
+      - '!terraform/README.md'
+      - '!terraform/bootstrap.sh'
+      - '!terraform/.env.example'
+      - '!terraform/role-definition.yaml'
   push:
     branches:
       - main
     paths:
       - 'terraform/**'
-    paths-ignore:
-      - 'terraform/README.md'
-      - 'terraform/bootstrap.sh'
-      - 'terraform/.env.example'
-      - 'terraform/role-definition.yaml'
+      - '!terraform/README.md'
+      - '!terraform/bootstrap.sh'
+      - '!terraform/.env.example'
+      - '!terraform/role-definition.yaml'
 
 permissions:
   contents: read

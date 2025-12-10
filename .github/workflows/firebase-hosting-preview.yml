@@ -3,7 +3,6 @@ name: Preview Web App on Firebase Hosting
 on:
   pull_request:
     branches:
-      - main
       - dev
     paths:
       - 'web/**'

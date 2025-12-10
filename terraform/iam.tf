@@ -89,3 +89,17 @@ resource "google_service_account_iam_member" "github_actions_workload_identity_u
   role               = "roles/iam.workloadIdentityUser"
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_actions_pool.name}/attribute.repository/${var.github_repository}"
 }
+
+### Enable Developer Connect Service Agent ###
+resource "google_project_service_identity" "devconnect-p4sa" {
+  provider = google-beta
+  project  = var.gcp_project_id
+  service  = "developerconnect.googleapis.com"
+}
+
+resource "google_project_iam_member" "devconnect-secret" {
+  project  = var.gcp_project_id
+  role     = "roles/secretmanager.admin"
+  member   = google_project_service_identity.devconnect-p4sa.member
+}
+###

@@ -1,0 +1,83 @@
+name: Terraform CI/CD
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'terraform/**'
+    paths-ignore:
+      - 'terraform/README.md'
+      - 'terraform/bootstrap.sh'
+      - 'terraform/.env.example'
+      - 'terraform/role-definition.yaml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'terraform/**'
+    paths-ignore:
+      - 'terraform/README.md'
+      - 'terraform/bootstrap.sh'
+      - 'terraform/.env.example'
+      - 'terraform/role-definition.yaml'
+
+permissions:
+  contents: read
+  id-token: write # required for auth step
+  pull-requests: write # Required for commenting plan on PRs
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./terraform
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: "1.7"
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check
+        # This step fails the job if the formatting check fails
+
+      - name: Terraform Init
+        run: terraform init -input=false
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan (Pull Request)
+        if: github.event_name == 'pull_request'
+        run: terraform plan -input=false
+        env:
+          TF_VAR_gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
+          TF_VAR_google_api_key_value: ${{ secrets.GOOGLE_API_KEY_VALUE }}
+          TF_VAR_google_cse_id_value: ${{ secrets.GOOGLE_CSE_ID_VALUE }}
+          TF_VAR_github_repository: ${{ github.repository }}
+
+      - name: Terraform Plan & Apply (Push)
+        if: github.event_name == 'push'
+        run: |
+          terraform plan -out=tfplan.binary -input=false
+          terraform apply -auto-approve -input=false tfplan.binary
+        env:
+          TF_VAR_gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
+          TF_VAR_google_api_key_value: ${{ secrets.GOOGLE_API_KEY_VALUE }}
+          TF_VAR_google_cse_id_value: ${{ secrets.GOOGLE_CSE_ID_VALUE }}
+          TF_VAR_github_repository: ${{ github.repository }}

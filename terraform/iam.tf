@@ -90,6 +90,16 @@ resource "google_service_account_iam_member" "github_actions_workload_identity_u
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_actions_pool.name}/attribute.repository/${var.github_repository}"
 }
 
+data "google_project" "project" {}
+
+# Grant the Cloud Build service account permission to read the git repository
+resource "google_project_iam_member" "cloudbuild_developerconnect_reader" {
+  project = var.gcp_project_id
+  role    = "roles/developerconnect.gitRepositoryReader"
+  member  = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
+}
+
+
 ### Enable Developer Connect Service Agent ###
 resource "google_project_service_identity" "devconnect-p4sa" {
   provider = google-beta

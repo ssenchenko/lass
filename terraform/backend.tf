@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket  = "learning-assistant-poc-tfstate"
-    prefix  = "terraform/state"
+    bucket = "learning-assistant-poc-tfstate"
+    prefix = "terraform/state"
   }
 }

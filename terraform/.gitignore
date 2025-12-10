@@ -10,3 +10,6 @@ terraform.rc
 *.tfstate.*
 .terraform.lock.hcl
 .env
+
+# Terraform plan output
+*tfplan*

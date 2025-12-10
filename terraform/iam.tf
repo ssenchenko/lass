@@ -99,6 +99,14 @@ resource "google_project_iam_member" "cloudbuild_developerconnect_reader" {
   member  = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
 }
 
+# Grant the App Engine default service account permission to fetch read tokens from Developer Connect
+# Firebase App Hosting may use this service account for builds
+resource "google_project_iam_member" "appengine_developerconnect_reader" {
+  project = var.gcp_project_id
+  role    = "roles/developerconnect.readTokenAccessor"
+  member  = "serviceAccount:${data.google_service_account.firebase_functions_sa.email}"
+}
+
 # Grant the GitHub Actions service account permission to view Developer Connect connections
 resource "google_project_iam_member" "github_actions_developerconnect_viewer" {
   project = var.gcp_project_id

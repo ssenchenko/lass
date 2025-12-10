@@ -106,6 +106,13 @@ resource "google_project_iam_member" "github_actions_developerconnect_viewer" {
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 
+# Grant the GitHub Actions service account Firebase App Hosting Viewer role
+resource "google_project_iam_member" "github_actions_firebaseapphosting_viewer" {
+  project = var.gcp_project_id
+  role    = "roles/firebaseapphosting.viewer"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
 
 ### Enable Developer Connect Service Agent ###
 resource "google_project_service_identity" "devconnect-p4sa" {

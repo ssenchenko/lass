@@ -92,10 +92,10 @@ resource "google_service_account_iam_member" "github_actions_workload_identity_u
 
 data "google_project" "project" {}
 
-# Grant the Cloud Build service account permission to read the git repository
+# Grant the Cloud Build service account permission to fetch read tokens from Developer Connect
 resource "google_project_iam_member" "cloudbuild_developerconnect_reader" {
   project = var.gcp_project_id
-  role    = "roles/developerconnect.gitRepositoryReader"
+  role    = "roles/developerconnect.readTokenAccessor"
   member  = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
 }
 

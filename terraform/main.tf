@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     google = {
-      source = "hashicorp/google"
+      source  = "hashicorp/google"
       version = "7.0"
     }
     google-beta = {
@@ -9,7 +9,7 @@ terraform {
       version = "~> 6.0"
     }
     random = {
-      source = "hashicorp/random"
+      source  = "hashicorp/random"
       version = "3.1.0"
     }
   }
@@ -42,13 +42,13 @@ resource "random_string" "site_id_suffix" {
 }
 
 resource "google_firebase_project" "default" {
-  project = var.gcp_project_id
+  project  = var.gcp_project_id
   provider = google-beta
 }
 
 # Ensures required APIs are enabled for the project.
 resource "google_project_service" "default" {
-  project  = var.gcp_project_id
+  project = var.gcp_project_id
   for_each = toset([
     "cloudbilling.googleapis.com",
     "cloudresourcemanager.googleapis.com",
@@ -64,7 +64,7 @@ resource "google_project_service" "default" {
 }
 
 resource "time_sleep" "wait_for_api_enablement" {
-  depends_on = [google_project_service.default]
+  depends_on      = [google_project_service.default]
   create_duration = "30s"
 }
 
@@ -78,30 +78,30 @@ resource "google_firebase_web_app" "default" {
 
 resource "google_firebase_hosting_site" "default" {
   provider = google-beta
-  project = var.gcp_project_id
-  site_id = "web-editor-${random_string.site_id_suffix.result}"
+  project  = var.gcp_project_id
+  site_id  = "web-editor-${random_string.site_id_suffix.result}"
 }
 
 resource "google_firebase_app_hosting_backend" "default" {
-  depends_on = [time_sleep.wait_for_api_enablement]
-  project = var.gcp_project_id
-  location = "us-central1"
-  backend_id = google_firebase_hosting_site.default.site_id
-  display_name = "web-editor"
+  depends_on       = [time_sleep.wait_for_api_enablement]
+  project          = var.gcp_project_id
+  location         = "us-central1"
+  backend_id       = google_firebase_hosting_site.default.site_id
+  display_name     = "web-editor"
   serving_locality = "GLOBAL_ACCESS"
-  app_id = google_firebase_web_app.default.app_id
-  service_account = data.google_service_account.firebase_functions_sa.email
+  app_id           = google_firebase_web_app.default.app_id
+  service_account  = data.google_service_account.firebase_functions_sa.email
 
   codebase {
-    repository = google_developer_connect_git_repository_link.lass.name
+    repository     = google_developer_connect_git_repository_link.lass.name
     root_directory = "/web"
   }
 }
 
 resource "google_firebase_app_hosting_traffic" "default" {
-  project          = google_firebase_app_hosting_backend.default.project
-  location         = google_firebase_app_hosting_backend.default.location
-  backend          = google_firebase_app_hosting_backend.default.backend_id
+  project  = google_firebase_app_hosting_backend.default.project
+  location = google_firebase_app_hosting_backend.default.location
+  backend  = google_firebase_app_hosting_backend.default.backend_id
 
   rollout_policy {
     codebase_branch = "main"

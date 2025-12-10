@@ -108,8 +108,8 @@ resource "google_project_service_identity" "devconnect-p4sa" {
 }
 
 resource "google_project_iam_member" "devconnect-secret" {
-  project  = var.gcp_project_id
-  role     = "roles/secretmanager.admin"
-  member   = google_project_service_identity.devconnect-p4sa.member
+  project = var.gcp_project_id
+  role    = "roles/secretmanager.admin"
+  member  = google_project_service_identity.devconnect-p4sa.member
 }
 ###

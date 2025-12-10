@@ -90,6 +90,30 @@ resource "google_service_account_iam_member" "github_actions_workload_identity_u
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_actions_pool.name}/attribute.repository/${var.github_repository}"
 }
 
+data "google_project" "project" {}
+
+# Grant the Cloud Build service account permission to read the git repository
+resource "google_project_iam_member" "cloudbuild_developerconnect_reader" {
+  project = var.gcp_project_id
+  role    = "roles/developerconnect.gitRepositoryReader"
+  member  = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
+}
+
+# Grant the GitHub Actions service account permission to view Developer Connect connections
+resource "google_project_iam_member" "github_actions_developerconnect_viewer" {
+  project = var.gcp_project_id
+  role    = "roles/developerconnect.viewer"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+# Grant the GitHub Actions service account Firebase App Hosting Viewer role
+resource "google_project_iam_member" "github_actions_firebaseapphosting_viewer" {
+  project = var.gcp_project_id
+  role    = "roles/firebaseapphosting.viewer"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+
 ### Enable Developer Connect Service Agent ###
 resource "google_project_service_identity" "devconnect-p4sa" {
   provider = google-beta
@@ -98,8 +122,8 @@ resource "google_project_service_identity" "devconnect-p4sa" {
 }
 
 resource "google_project_iam_member" "devconnect-secret" {
-  project  = var.gcp_project_id
-  role     = "roles/secretmanager.admin"
-  member   = google_project_service_identity.devconnect-p4sa.member
+  project = var.gcp_project_id
+  role    = "roles/secretmanager.admin"
+  member  = google_project_service_identity.devconnect-p4sa.member
 }
 ###

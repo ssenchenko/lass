@@ -42,6 +42,13 @@ gcloud storage buckets add-iam-policy-binding gs://${TERRAFORM_BACKEND_BUCKET} \
     --role="roles/storage.objectAdmin" \
     --condition=None
 
+# Grant the Developer Connect Viewer role
+echo "Granting Developer Connect Viewer role..."
+gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
+    --member="serviceAccount:${TERRAFORM_SERVICE_ACCOUNT_EMAIL}" \
+    --role="roles/developerconnect.viewer" \
+    --condition=None
+
 echo "Bootstrap complete."
 echo ""
 echo "--- GitHub Connection Setup ---"

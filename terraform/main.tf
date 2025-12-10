@@ -91,6 +91,47 @@ resource "google_firebase_app_hosting_backend" "default" {
   serving_locality = "GLOBAL_ACCESS"
   app_id = google_firebase_web_app.default.app_id
   service_account = data.google_service_account.firebase_functions_sa.email
+
+  codebase {
+    repository = google_developer_connect_git_repository_link.lass.name
+    root_directory = "/web"
+  }
+}
+
+resource "google_firebase_app_hosting_traffic" "default" {
+  project          = google_firebase_app_hosting_backend.default.project
+  location         = google_firebase_app_hosting_backend.default.location
+  backend          = google_firebase_app_hosting_backend.default.backend_id
+
+  rollout_policy {
+    codebase_branch = "main"
+  }
+}
+
+resource "google_developer_connect_git_repository_link" "lass" {
+  provider = google-beta
+  project  = var.gcp_project_id
+  location = "us-central1"
+
+  git_repository_link_id = "lass-repo-link" # A unique ID for the link
+  parent_connection      = google_developer_connect_connection.lass-connection.connection_id
+  clone_uri              = "https://github.com/${var.github_repository}.git"
+}
+
+resource "google_developer_connect_connection" "lass-connection" {
+  provider      = google-beta
+  project       = var.gcp_project_id
+  location      = "us-central1"
+  connection_id = "github-connection"
+  github_config {
+    github_app = "FIREBASE"
+  }
+  depends_on = [google_project_iam_member.devconnect-secret]
+}
+
+output "next_steps" {
+  description = "Follow the action_uri if present to continue setup"
+  value       = google_developer_connect_connection.lass-connection.installation_state
 }
 
 output "firebase_hosting_site_id" {

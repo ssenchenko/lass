@@ -99,6 +99,13 @@ resource "google_project_iam_member" "cloudbuild_developerconnect_reader" {
   member  = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
 }
 
+# Grant the GitHub Actions service account permission to view Developer Connect connections
+resource "google_project_iam_member" "github_actions_developerconnect_viewer" {
+  project = var.gcp_project_id
+  role    = "roles/developerconnect.viewer"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
 
 ### Enable Developer Connect Service Agent ###
 resource "google_project_service_identity" "devconnect-p4sa" {

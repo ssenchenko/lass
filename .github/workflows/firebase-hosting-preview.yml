@@ -3,7 +3,7 @@ name: Preview Web App on Firebase Hosting
 on:
   pull_request:
     branches:
-      - dev
+      - main
     paths:
       - 'web/**'
 
@@ -39,6 +39,23 @@ jobs:
           npm run build
 
       - name: Deploy to Firebase Hosting preview channel
+        id: deploy
         working-directory: ./web
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FIREBASE_CLI_EXPERIMENTS: webframeworks
         run: |
-          firebase hosting:channel:deploy --project=${{ secrets.GCP_PROJECT_ID }} --expires=7d
+          CHANNEL_ID="pr-${{ github.event.pull_request.number }}"
+          OUTPUT=$(firebase hosting:channel:deploy $CHANNEL_ID --project=${{ secrets.GCP_PROJECT_ID }} --expires=1h --json 2>&1)
+          echo "deploy_output<<EOF" >> $GITHUB_OUTPUT
+          echo "$OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Add or update preview URL in PR comment
+        uses: actions/github-script@v7
+        env:
+          DEPLOY_OUTPUT: ${{ steps.deploy.outputs.deploy_output }}
+        with:
+          script: |
+            const script = require('./.github/scripts/comment-preview-url.js');
+            await script({ github, context, core });

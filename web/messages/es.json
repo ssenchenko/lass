@@ -1,0 +1,7 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"hello_world": "Hola, {name} en español!",
+	"menu_train": "Entrenamiento",
+	"menu_vocabulary": "Vocabulario",
+	"menu_login": "Accesso"
+}

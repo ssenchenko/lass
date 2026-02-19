@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'terraform/**'
+      - '!terraform/AGENTS.md'
       - '!terraform/README.md'
       - '!terraform/bootstrap.sh'
       - '!terraform/.env.example'

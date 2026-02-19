@@ -6,6 +6,8 @@ on:
       - main
     paths:
       - 'web/**'
+      - '!web/README.md'
+      - '!web/AGENTS.md'
 
 jobs:
   build_and_preview:

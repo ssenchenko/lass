@@ -1,0 +1,5 @@
+env:
+- variable: FIREBASE_AUTH_EMULATOR_HOST
+  value: 127.0.0.1:9099
+- variable: FIRESTORE_EMULATOR_HOST
+  value: 127.0.0.1:8080

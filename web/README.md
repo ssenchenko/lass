@@ -1,78 +1,100 @@
-# sv
+# Web App
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+SvelteKit web app deployed with Firebase App Hosting.
 
-## Creating a project
+## Runtime
 
-If you're seeing this, you've probably already done this step. Congrats!
+- App Hosting runtime: Node 22 (`apphosting.yaml`)
+- Local emulator container base image: `node:22`
+- Java 21 is installed inside the emulator container for Firebase emulators
+
+## Prerequisites
+
+- Docker Desktop (recommended local workflow for Firebase emulators)
+- Node.js 22 (only needed for running npm scripts directly on host)
+
+## Local Development (host)
+
+From `web/`:
 
 ```sh
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
+npm ci
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
-
-To create a production version of your app:
+Build:
 
 ```sh
 npm run build
 ```
 
-You can preview the production build with `npm run preview`.
+## Firebase Emulators (Docker)
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+This repository uses Docker as the source of truth for local emulator runs.
+
+From `web/`:
+
+```sh
+docker compose up --build
+```
+
+Expected endpoints:
+
+- App Hosting: [http://127.0.0.1:5002](http://127.0.0.1:5002)
+- Auth emulator: [http://127.0.0.1:9099](http://127.0.0.1:9099)
+- Firestore emulator: [http://127.0.0.1:8080](http://127.0.0.1:8080)
+- Emulator UI: [http://127.0.0.1:4000](http://127.0.0.1:4000)
+
+Stop:
+
+```sh
+docker compose down
+```
+
+Stop and remove volumes:
+
+```sh
+docker compose down -v
+```
+
+### Docker hot-swap (file sync)
+
+For fast local iteration without rebuilding the image manually:
+
+```sh
+docker compose up --build --watch
+```
+
+What hot-swap does in this repo:
+
+- Syncs source file changes into `/app` in the running container
+- Ignores `node_modules`, `.svelte-kit`, `build`, `.git`, and `.DS_Store`
+- Rebuilds the image automatically when `package.json` or `package-lock.json` changes
+
+## Test Commands
+
+From `web/`:
+
+```sh
+npm run check
+npm run lint
+npm run test:unit
+npm run build
+npm run test:e2e
+```
 
 ## Firebase App Hosting Setup
 
-This project uses Firebase App Hosting for deployment. The initial setup is done using the Firebase CLI.
+If App Hosting is not initialized yet in this repo:
 
-1.  **Install the Firebase CLI:**
+```sh
+firebase init apphosting
+```
 
-    ```sh
-    npm install -g firebase-tools
-    ```
+This creates `firebase.json` and `.firebaserc`.
 
-2.  **Login to Firebase:**
+If Terraform already manages the backend, import the created backend:
 
-    ```sh
-    firebase login
-    ```
-
-3.  **Initialize Firebase App Hosting:**
-
-    Run the following command in the `web` directory:
-
-    ```sh
-    firebase init apphosting
-    ```
-
-    This will guide you through the following steps:
-
-    *   Select a Firebase project.
-    *   Connect to a GitHub repository.
-    *   Configure the build settings (the CLI should automatically detect the SvelteKit settings).
-
-    This will create a `firebase.json` file and a `.firebaserc` file.
-
-4.  **Update Terraform:**
-
-    The `firebase init apphosting` command will create a `google_firebase_app_hosting_backend` resource. You will need to import this resource into your Terraform state.
-
-    ```sh
-    terraform import google_firebase_app_hosting_backend.default projects/your-project-id/backends/your-backend-id
-    ```
+```sh
+terraform import google_firebase_app_hosting_backend.default projects/your-project-id/backends/your-backend-id
+```

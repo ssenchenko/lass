@@ -10,6 +10,17 @@
 - Don’t refactor unrelated code.
 - If requirements are unclear, ask 1–3 targeted questions before large edits.
 
+## Git Workflow & Branching
+- Always create a new **feature branch** for each change/task:
+  - Branch names should follow: `feature/<short-description>` or `fix/<short-description>`
+  - Do NOT commit code directly to `main`, `develop`, or protected branches.
+
+- Codex should NOT push directly to protected branches.
+- Codex should propose changes via a **draft Pull Request** when possible.
+- Each commit should be atomic: focus on one feature/fix and reference the task/issue.
+- Commit messages should be clear and follow conventions (`feat:` / `fix:` / `chore:` prefix).
+- Humans must review all AI-generated code before merging.
+
 ## CI / GitHub Actions
 - Workflows live in `.github/workflows/`
 - Any change must keep CI green.

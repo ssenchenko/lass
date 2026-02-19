@@ -1,0 +1,32 @@
+services:
+  firebase:
+    container_name: firebase-emulator
+    stdin_open: true # docker run -i
+    tty: true # docker run -t
+    build:
+      context: .
+    volumes:
+      - firebase_node_modules:/app/node_modules
+    ports:
+      - "5002:5002"
+      - "9099:9099"
+      - "8080:8080"
+      - "4000:4000"
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+          ignore:
+            - node_modules/
+            - .svelte-kit/
+            - build/
+            - .git/
+            - .DS_Store
+        - action: rebuild
+          path: package.json
+        - action: rebuild
+          path: package-lock.json
+
+volumes:
+  firebase_node_modules:

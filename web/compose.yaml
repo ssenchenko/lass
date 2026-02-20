@@ -5,6 +5,8 @@ services:
     tty: true # docker run -t
     build:
       context: .
+      args:
+        FIREBASE_EMULATOR_BASE_IMAGE: ${FIREBASE_EMULATOR_BASE_IMAGE:-ghcr.io/ssenchenko/lass-web-emulator-base:node22-java21}
     volumes:
       - firebase_node_modules:/app/node_modules
     ports:

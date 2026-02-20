@@ -5,8 +5,8 @@ SvelteKit web app deployed with Firebase App Hosting.
 ## Runtime
 
 - App Hosting runtime: Node 22 (`apphosting.yaml`)
-- Local emulator container base image: `node:22`
-- Java 21 is installed inside the emulator container for Firebase emulators
+- Local emulator base image: `ghcr.io/ssenchenko/lass-web-emulator-base:node22-java21`
+- Emulator app image: `web/Dockerfile` (installs app deps, uses the base image above)
 
 ## Prerequisites
 
@@ -36,6 +36,16 @@ From `web/`:
 
 ```sh
 docker compose up --build
+```
+
+The compose file builds `web/Dockerfile` with:
+
+- `FIREBASE_EMULATOR_BASE_IMAGE=ghcr.io/ssenchenko/lass-web-emulator-base:node22-java21`
+
+Override base image (optional):
+
+```sh
+FIREBASE_EMULATOR_BASE_IMAGE=ghcr.io/ssenchenko/lass-web-emulator-base:sha-<digest-or-sha> docker compose up --build
 ```
 
 Expected endpoints:
@@ -70,6 +80,14 @@ What hot-swap does in this repo:
 - Syncs source file changes into `/app` in the running container
 - Ignores `node_modules`, `.svelte-kit`, `build`, `.git`, and `.DS_Store`
 - Rebuilds the image automatically when `package.json` or `package-lock.json` changes
+
+### Bootstrap base image locally (optional)
+
+If GHCR base image is not published yet, build and tag it locally:
+
+```sh
+docker build -f docker/firebase-emulator-base.Dockerfile -t ghcr.io/ssenchenko/lass-web-emulator-base:node22-java21 .
+```
 
 ## Test Commands
 

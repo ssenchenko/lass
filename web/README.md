@@ -113,7 +113,7 @@ npm run test:integ
 
 **For CI/CD**, the workflow uses Firebase CLI directly:
 ```sh
-firebase emulators:exec --project learning-assistant-poc --only apphosting,auth,firestore "npm run test:integ"
+firebase emulators:exec --config firebase.ci.json --project learning-assistant-poc --only apphosting,auth,firestore "npm run test:integ"
 ```
 
 ## Firebase App Hosting Setup

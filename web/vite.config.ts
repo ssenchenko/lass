@@ -10,6 +10,11 @@ export default defineConfig({
     host: "0.0.0.0",
     port: Number(process.env.PORT) || 5173,
   },
+  preview: {
+    // App Hosting emulator sets PORT for production-like preview runs in CI.
+    host: "0.0.0.0",
+    port: Number(process.env.PORT) || 4173,
+  },
   plugins: [
     tailwindcss(),
     sveltekit(),

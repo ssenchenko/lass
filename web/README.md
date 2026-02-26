@@ -105,6 +105,7 @@ npm run test:integ
 `test:integ` targets the App Hosting emulator at `http://127.0.0.1:5002`.
 
 **For local development**, run emulators in Docker first:
+
 ```sh
 docker compose up --build
 # in another terminal
@@ -112,6 +113,7 @@ npm run test:integ
 ```
 
 **For CI/CD**, the workflow uses Firebase CLI directly:
+
 ```sh
 firebase emulators:exec --config firebase.ci.json --project learning-assistant-poc --only apphosting,auth,firestore "npm run test:integ"
 ```

@@ -1,17 +1,10 @@
 {
-  "hosting": {
-    "source": ".",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "frameworksBackend": {
-      "region": "us-central1"
-    }
-  },
   "emulators": {
     "apphosting": {
       "host": "0.0.0.0",
       "port": 5002,
       "rootDirectory": "./",
-      "startCommand": "npm run dev"
+      "startCommand": "npm run preview"
     },
     "auth": {
       "host": "0.0.0.0",
@@ -20,11 +13,6 @@
     "firestore": {
       "host": "0.0.0.0",
       "port": 8080
-    },
-    "ui": {
-      "enabled": true,
-      "host": "0.0.0.0",
-      "port": 4000
     },
     "singleProjectMode": true
   }

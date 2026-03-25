@@ -59,17 +59,23 @@ jobs:
           FIREBASE_CLI_EXPERIMENTS: webframeworks
         run: firebase emulators:exec --config firebase.ci.json --project learning-assistant-poc --only apphosting,auth,firestore "npm run test:integ -- --reporter=line"
 
+      # Deploy steps are skipped when secrets are unavailable (e.g. Dependabot or
+      # fork PRs). GitHub Actions `if` cannot reference the `secrets` context
+      # directly, so we mirror the secret into an env var for the condition check.
       - name: Authenticate to Google Cloud
-        if: github.event_name == 'pull_request'
+        if: env.WIF_PROVIDER != ''
+        env:
+          WIF_PROVIDER: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.SERVICE_ACCOUNT }}
 
       - name: Deploy to Firebase Hosting preview channel
-        if: github.event_name == 'pull_request'
+        if: env.WIF_PROVIDER != ''
         id: deploy
         env:
+          WIF_PROVIDER: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FIREBASE_CLI_EXPERIMENTS: webframeworks
         run: |
@@ -80,9 +86,10 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Add or update preview URL in PR comment
-        if: github.event_name == 'pull_request'
+        if: env.WIF_PROVIDER != ''
         uses: actions/github-script@v7
         env:
+          WIF_PROVIDER: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
           DEPLOY_OUTPUT: ${{ steps.deploy.outputs.deploy_output }}
         with:
           script: |

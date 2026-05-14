@@ -49,6 +49,6 @@
     "vitest-browser-svelte": "^0.1.0"
   },
   "overrides": {
-    "picomatch": "^4.0.3"
+    "picomatch": "^4.0.4"
   }
 }
